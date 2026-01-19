@@ -1,0 +1,28 @@
+# --- FastAPI stack ---
+fastapi
+uvicorn[standard]
+pydantic
+
+# --- File upload & parsing ---
+python-multipart
+PyPDF2
+python-docx
+
+# --- Web scraping / URL ingestion ---
+requests
+beautifulsoup4
+firecrawl-py
+python-dotenv
+
+# --- Embeddings & vector search ---
+sentence-transformers
+faiss-cpu
+numpy
+
+# --- LLM / LangChain ---
+langchain
+langchain-openai
+openai
+
+# --- Utilities ---
+tqdm
