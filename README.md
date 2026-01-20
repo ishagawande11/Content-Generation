@@ -7,8 +7,11 @@ Upload documents, images, or URLs and ask questions. Answers are generated stric
 Backend (port 8000):
 
 cd backend
+
 pip install -r requirements.txt
+
 uvicorn app:app --reload --port 8000
+
 
 Storage:
 Uses local file storage + FAISS vector index (no database required)
