@@ -5,6 +5,7 @@ Document Q&A using AI
 Upload documents, images, or URLs and ask questions. Answers are generated strictly from the uploaded content.
 
 Backend (port 8000):
+
 cd backend
 pip install -r requirements.txt
 uvicorn app:app --reload --port 8000
