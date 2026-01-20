@@ -1,14 +1,16 @@
 # Content-Generation
 
-Document Q&A using AI
+##Document Q&A using AI
 
 Upload documents, images, or URLs and ask questions. Answers are generated strictly from the uploaded content.
 
 
-Storage:
+##Storage:
 Uses local file storage + FAISS vector index (no database required)
 
-Key Files – Backend:
+
+
+##Key Files – Backend:
 
 •app.py – FastAPI routes (upload, URL ingest, ask question)
 
