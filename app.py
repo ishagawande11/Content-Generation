@@ -5,10 +5,10 @@ from ingestion.url_ingest import ingest_url
 from pydantic import BaseModel
 from ingestion.ingest_image import ingest_image_bytes
 from qna.llm import answer_question
-# Add import for answer_question; adjust the module path as needed (e.g., from qna import answer_question)
-# from qna import answer_question
+from routes.chart import router as chart_router
 
 app = FastAPI()
+app = FastAPI(title="Chart Understanding API")
 
 @app.get("/")
 def health():
@@ -30,7 +30,7 @@ class URLRequest(BaseModel):
 async def upload_from_url(request: URLRequest):
     return ingest_url(request.url)
 
-# Define AskRequest model
+
 class AskRequest(BaseModel):
     document_id: str
     question: str
@@ -55,9 +55,11 @@ def ask_question(request: AskRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
-# Change route to avoid conflict with the document upload
+
 @app.post("/upload-image")
 async def upload_image(file: UploadFile = File(...)):
     file_bytes = await file.read()
     text = ingest_image_bytes(file_bytes)
     return {"text": text}
+
+app.include_router(chart_router)

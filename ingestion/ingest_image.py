@@ -4,6 +4,10 @@ import io
 from PIL import Image
 import pytesseract  # OCR
 from openai import OpenAI
+import pytesseract
+
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+
 
 client = OpenAI()
 
