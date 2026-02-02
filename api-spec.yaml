@@ -1,0 +1,239 @@
+openapi: 3.0.3
+
+info:
+  title: AI Learning Platform API
+  description: >
+    Role-Based AI learning system supporting content upload,
+    AI-generated summaries, flashcards, quizzes, and trainee progress tracking.
+  version: 1.0.0
+
+servers:
+  - url: http://127.0.0.1:8000
+
+tags:
+  - name: Authentication
+  - name: Admin
+  - name: Trainer
+  - name: Trainee
+  - name: Content
+  - name: AI
+  - name: Quiz
+  - name: Progress
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    LoginResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+        role:
+          type: string
+          enum: [ADMIN, TRAINER, TRAINEE]
+
+    Course:
+      type: object
+      required: [title, description]
+      properties:
+        course_id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+
+    SourceRequest:
+      type: object
+      properties:
+        source_type:
+          type: string
+          enum: [TEXT, URL, FILE]
+        content:
+          type: string
+
+    AIRequest:
+      type: object
+      required: [source_id]
+      properties:
+        source_id:
+          type: string
+
+    QuizAttempt:
+      type: object
+      required: [quiz_id, answers]
+      properties:
+        quiz_id:
+          type: string
+        answers:
+          type: array
+          items:
+            type: string
+
+security:
+  - BearerAuth: []
+
+paths:
+
+  /api/login:
+    post:
+      tags: [Authentication]
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+
+  /api/admin/analytics:
+    get:
+      tags: [Admin]
+      summary: View platform analytics
+      responses:
+        200:
+          description: Analytics data
+
+  /api/admin/users:
+    get:
+      tags: [Admin]
+      summary: Manage users
+      responses:
+        200:
+          description: User list
+
+  /api/trainer/course:
+    post:
+      tags: [Trainer]
+      summary: Create course
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Course'
+      responses:
+        201:
+          description: Course created
+
+  /api/trainer/source:
+    post:
+      tags: [Trainer, Content]
+      summary: Upload source content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SourceRequest'
+      responses:
+        200:
+          description: Source uploaded
+
+  /api/content:
+    get:
+      tags: [Content]
+      summary: View content list
+      responses:
+        200:
+          description: Content list
+
+  /api/content/{source_id}:
+    get:
+      tags: [Content]
+      summary: View content
+      parameters:
+        - name: source_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: Content details
+
+  /api/ai/summary:
+    post:
+      tags: [AI]
+      summary: Generate summary
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIRequest'
+      responses:
+        200:
+          description: Summary generated
+
+  /api/ai/flashcards:
+    post:
+      tags: [AI]
+      summary: Generate flashcards
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIRequest'
+      responses:
+        200:
+          description: Flashcards generated
+
+  /api/ai/quiz:
+    post:
+      tags: [AI]
+      summary: Generate quiz
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AIRequest'
+      responses:
+        200:
+          description: Quiz generated
+
+  /api/quiz/attempt:
+    post:
+      tags: [Quiz, Trainee]
+      summary: Attempt quiz
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/QuizAttempt'
+      responses:
+        200:
+          description: Attempt saved
+
+  /api/progress:
+    get:
+      tags: [Progress]
+      summary: View learning progress
+      responses:
+        200:
+          description: Progress details
